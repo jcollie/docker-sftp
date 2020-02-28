@@ -1,0 +1,27 @@
+- name: copy out {{ item }} public host key
+  copy:
+    content: "{{ ansible_local['keys'][item]['public'] }}"
+    dest: /etc/ssh/ssh_host_{{ item }}_key.pub
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_local['keys'][item]['public'] is defined
+
+- name: copy out {{ item }} private host key
+  copy:
+    content: "{{ ansible_local['keys'][item]['private'] }}"
+    dest: /etc/ssh/ssh_host_{{ item }}_key
+    owner: root
+    group: ssh_keys
+    mode: 0640
+  when: ansible_local['keys'][item]['private'] is defined
+
+- name: check status of {{ item }} host key
+  stat:
+    path: /etc/ssh/ssh_host_{{ item }}_key
+  register: host_key_stat
+
+- name: generate {{ item }} host key
+  command:
+    cmd: /usr/libexec/openssh/sshd-keygen {{ item }}
+  when: not (host_key_stat.stat.exists and host_key_stat.stat.size > 0)

@@ -1,0 +1,25 @@
+---
+- name: configure sftp
+  hosts:
+    - all
+  tasks:
+    - name: generate ssh keys
+      include_tasks: keys.yml
+      loop:
+        - rsa
+        - ecdsa
+        - ed25519
+
+    - name: sshd config file
+      template:
+        src: sshd_config.j2
+        dest: /etc/ssh/sshd_config
+        mode: 0600
+
+    - name: create groups
+      include_tasks: groups.yml
+      loop: "{{ ansible_local.groups }}"
+
+    - name: create users
+      include_tasks: users.yml
+      loop: "{{ ansible_local.users }}"

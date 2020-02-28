@@ -1,0 +1,6 @@
+all:
+  hosts:
+    localhost
+  vars:
+    ansible_connection: local
+    ansible_python: /usr/bin/python3

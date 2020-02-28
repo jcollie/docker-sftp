@@ -1,0 +1,4 @@
+- name: "create group for {{ item.groupname }}"
+  group:
+    name: "{{ item.groupname }}"
+    gid: "{{ item.gid }}"

@@ -1,0 +1,23 @@
+Port 22
+ListenAddress 0.0.0.0
+ListenAddress ::
+LogLevel VERBOSE
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+PermitRootLogin no
+AuthorizedKeysFile .ssh/authorized_keys
+PasswordAuthentication yes
+ChallengeResponseAuthentication no
+GSSAPIAuthentication no
+UsePAM yes
+AllowAgentForwarding no
+AllowTcpForwarding no
+X11Forwarding no
+PermitTTY no
+PrintMotd no
+PrintLastLog no
+TCPKeepAlive no
+Subsystem	sftp internal-sftp
+ForceCommand internal-sftp -l VERBOSE
+ChrootDirectory %h/chroot

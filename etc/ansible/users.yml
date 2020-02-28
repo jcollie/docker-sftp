@@ -1,0 +1,59 @@
+- name: "create user for {{ item.username }}"
+  user:
+    name: "{{ item.username }}"
+    uid: "{{ item.uid }}"
+    group: "{{ item.group }}"
+    shell: "/sbin/nologin"
+    password: "{{ item.password }}"
+    home: "/home/{{ item.username }}"
+    create_home: no
+
+- name: "create home directory for {{ item.username }}"
+  file:
+    path: "/home/{{ item.username }}"
+    mode: 0755
+    owner: root
+    group: root
+    state: directory
+
+- name: create ssh directory for {{ item.username }}
+  file:
+    path: "/home/{{ item.username }}/.ssh"
+    mode: 0700
+    owner: "{{ item.username }}"
+    group: "{{ item.group }}"
+    state: directory
+
+- name: create chroot directory for {{ item.username }}
+  file:
+    path: "/home/{{ item.username }}/chroot"
+    mode: 0755
+    owner: root
+    group: root
+    state: directory
+
+- name: create home in chroot directory for {{ item.username }}
+  file:
+    path: "/home/{{ item.username }}/chroot/home"
+    mode: 0755
+    owner: root
+    group: root
+    state: directory
+
+- name: create home in chroot directory for {{ item.username }}
+  file:
+    path: "/home/{{ item.username }}/chroot/home/{{ item.username }}"
+    mode: 0750
+    owner: "{{ item.username }}"
+    group: "{{ item.group }}"
+    state: directory
+
+- name: create authorized keys for {{ item.username }}
+  authorized_key:
+    user: "{{ item.username }}"
+    state: present
+    key: "{{ key }}"
+  loop: "{{ item.authorized_keys }}"
+  loop_control:
+    loop_var: key
+  when: item.authorized_keys is defined
