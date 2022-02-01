@@ -4,7 +4,7 @@
     uid: "{{ item.uid }}"
     group: "{{ item.group }}"
     shell: "/sbin/nologin"
-    password: "{{ item.password }}"
+    password: "{{ item.password | default(omit) }}"
     home: "/home/{{ item.username }}"
     create_home: no
 
@@ -53,7 +53,7 @@
     user: "{{ item.username }}"
     state: present
     key: "{{ key }}"
-  loop: "{{ item.authorized_keys }}"
+  loop: "{{ item.authorized_keys | default([]) }}"
   loop_control:
     loop_var: key
   when: item.authorized_keys is defined
